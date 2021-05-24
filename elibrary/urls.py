@@ -37,5 +37,16 @@ urlpatterns = [
     path('subjectview_sem6/', views.subjectview_sem6 , name='subjectview_sem6'),
     path('subjectview_sem7/', views.subjectview_sem7 , name='subjectview_sem7'),
     path('subjectview_sem8/', views.subjectview_sem8 , name='subjectview_sem8'),
+    path('stackoverflow-home/',views.stack_home,name='stackoverflow-home'),
+    path('detail/<int:id>',views.detail,name='stackoverflow-detail_page'),
+    path('save-comment',views.save_comment,name='save-comment'),
+    path('save-upvote',views.save_upvote,name='save-upvote'),
+    path('save-downvote',views.save_downvote,name='save-downvote'),
+    path('ask-question',views.ask_form,name='ask-question'),
+    path('tag/<str:tag>',views.tag,name='tag'),
+    path('profile/',views.profile,name='profile'),
+    path('tags/',views.tags,name='tags'),
+#    path('user/<str:username>', UserQuestionsListView.as_view(), name='user-qstns'),
+    
   
 ]
