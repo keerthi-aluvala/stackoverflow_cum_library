@@ -4,22 +4,36 @@
 {% block title %}{{quest.title}}{% endblock %}
 {% block content %}
     <div class="container">
-        <h2 class="my-4">{{quest.title}}</h2>
-        <div class="card-body">
-            <pre>
-                {{quest.detail}}
-            </pre>
-        </div>
+        <article class="media content-section">
+        	<img class="rounded-circle article-img" src= "{{ quest.user.profile.image.url }}">
+	        <div class="media-body">
+	            <div class="article-metadata">
+	              <a class="mr-2" href="{% url 'user-qstns' quest.user.username %}">{{ quest.user.username }}</a>
+	              <small class="text-muted">{{ quest.add_time|date:'d/m/Y' }}</small>
+	            </div>
+	            <h2 class="article-title">{{ quest.title }}</h2>
+	            <p class="article-content">{{ quest.detail }}</p>
+	         </div>
+        </article>
         <p>
             tags:
             {% for tag in tags %}
             <a href="/tag/{{tag|slugify}}" class="badge badge-secondary p-1">{{tag}}</a>
             {% endfor %}
         </p>
+        <!--
+        <h2 class="my-4">{{quest.title}}</h2>
+        <div class="card-body">
+            <pre>
+                {{quest.detail}}
+            </pre>
+        </div>     
+        
         <p>
             <span class="mr-4">{{quest.add_time|date:'d/m/Y'}}</span>
-            <a href="#">{{quest.user.username}}</a>
+            <a href="{% url 'user-qstns' quest.user.username %}">{{quest.user.username}}</a>
         </p>
+        -->
         <hr/>
         {% for answer in answers %}
         <div class="row">
@@ -42,7 +56,7 @@
                     {{answer.detail}}
                 </pre>
                 <p>
-                    <a href="#" class="mr-3">{{answer.user.username}}</a>
+                    <a href="{% url 'user-qstns' answer.user.username %}" class="mr-3">{{answer.user.username}}</a>
                     <span class="mr-3">
                         <span class="comment-count-{{answer.id}}">{{answer.comment_set.count}}</span> comments</span>
                     <span>{{answer.add_time|date:'m/d/Y'}}</span>
@@ -55,7 +69,7 @@
                         <div class="card-body">
                             <p>{{comment.comment}}</p>
                             <p>
-                                <a href="#">{{comment.user.username}}</a>
+                                <a href="{% url 'user-qstns' comment.user.username %}">{{comment.user.username}}</a>
                             </p>
                         </div>
                     </div>

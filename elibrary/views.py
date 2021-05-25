@@ -11,7 +11,14 @@ from .forms import AnswerForm, QuestionForm
 from django.contrib import messages
 from django.db.models import Count
 from users.forms import UserUpdateForm, ProfileUpdateForm
-from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import (
+	ListView, 
+	DetailView, 
+	CreateView,
+	UpdateView,
+	DeleteView
+)
 
 def subjectview_sem3(request): 
 	DMA = subject()
@@ -524,6 +531,7 @@ def ece_sem6(request):
 def ece_sem7(request):
 	return render(request,'elibrary/ece_sem7.html') 
 
+@login_required
 def stack_home(request):
     if 'q' in request.GET:
         q=request.GET['q']
@@ -538,14 +546,28 @@ def stack_home(request):
 
 class UserQuestionsListView(ListView):
 	model = Question
-	template_name = "user-qstns.html"
-	context_object_name = "quests"
+	template_name = "elibrary/user-qstns.html"
+	context_object_name = "Question"
 	paginate_by = 5
 
 	def get_queryset(self):
 		user = get_object_or_404(User, username=self.kwargs.get('username'))
-		return post.objects.filter(user=user).order_by('-id')
+		return Question.objects.filter(user=user).order_by('-id')
 
+class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Question
+	fields = ['title','detail','tags']
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		return super().form_valid(form)
+
+	def test_func(self):
+		question = self.get_object()
+		if self.request.user == question.author:
+			return True
+		else:
+			return False
 
 def detail(request,id):
     quest=Question.objects.get(pk=id)
@@ -561,6 +583,7 @@ def detail(request,id):
             answer.save()
             messages.success(request,'Answer has been submitted!')
     return render(request,'elibrary/detail.html',{
+		'id':id,
         'quest':quest,
         'tags':tags,
         'answers':answers,
@@ -622,9 +645,11 @@ def ask_form(request):
             messages.success(request,'Question has been added.')
     return render(request,'elibrary/ask-question.html',{'form':form})
 
+
+
 def tag(request,tag):
     quests=Question.objects.annotate(total_comments=Count('answer__comment')).filter(tags__icontains=tag).order_by('-id')
-    paginator=Paginator(quests,10)
+    paginator=Paginator(quests,5)
     page_num=request.GET.get('page',1)
     quests=paginator.page(page_num)
     return render(request,'elibrary/tag.html',{'quests':quests,'tag':tag})

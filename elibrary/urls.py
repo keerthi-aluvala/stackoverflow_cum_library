@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views
+from . import views 
+from .views import UserQuestionsListView, QuestionUpdateView
 
 urlpatterns = [
     path('', views.home, name='library-home'),
@@ -38,7 +39,7 @@ urlpatterns = [
     path('subjectview_sem7/', views.subjectview_sem7 , name='subjectview_sem7'),
     path('subjectview_sem8/', views.subjectview_sem8 , name='subjectview_sem8'),
     path('stackoverflow-home/',views.stack_home,name='stackoverflow-home'),
-    path('detail/<int:id>',views.detail,name='stackoverflow-detail_page'),
+    path('detail/<int:id>/',views.detail,name='stackoverflow-detail_page'),
     path('save-comment',views.save_comment,name='save-comment'),
     path('save-upvote',views.save_upvote,name='save-upvote'),
     path('save-downvote',views.save_downvote,name='save-downvote'),
@@ -46,7 +47,7 @@ urlpatterns = [
     path('tag/<str:tag>',views.tag,name='tag'),
     path('profile/',views.profile,name='profile'),
     path('tags/',views.tags,name='tags'),
-#    path('user/<str:username>', UserQuestionsListView.as_view(), name='user-qstns'),
+    path('user/<str:username>', UserQuestionsListView.as_view(), name='user-qstns'),
+    path('detail/<int:id>/update/', QuestionUpdateView.as_view() , name='qstn-update'),
     
-  
 ]

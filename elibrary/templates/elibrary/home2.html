@@ -31,8 +31,8 @@
                     
                         <a class="nav-item nav-link" href="#">Home</a>
                         <a class="nav-item nav-link" href="/tags">Tags</a>
+                    {% if user.is_authenticated %} 
                         <a class="nav-item nav-link" href="/ask-question">Ask</a>
-                    {% if user.is_authenticated %}
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                     {% endif %}
                     </div>
@@ -63,7 +63,7 @@
         	<img class="rounded-circle article-img" src= "{{ quest.user.profile.image.url }}">
 	        <div class="media-body">
 	            <div class="article-metadata">
-	                <a class="mr-2" href="#">{{ quest.user.username }}</a>
+	                <a class="mr-2" href="{% url 'user-qstns' quest.user.username %}">{{ quest.user.username }}</a>
                     <a href="#" class="mr-2">{{quest.answer_set.count}} Answers</a>
                     <a href="#" class="mr-2">{{quest.total_comments}} Comments</a>
 	                <small class="text-muted">{{ quest.add_time|date:"F d, Y" }}</small>
